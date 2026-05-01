@@ -1,6 +1,6 @@
 export const TEXT_AI_PROVIDER = {
   name: 'GitHub Models',
-  model: 'openai/gpt-5-nano',
+  model: 'deepseek/DeepSeek-V3-0324',
 }
 
 export async function cleanTextForNarration(text) {
