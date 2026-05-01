@@ -5,6 +5,7 @@ import VoiceSelector from './VoiceSelector.jsx'
 import KaraokePlayer from '../library/KaraokePlayer.jsx'
 import { voices } from '../../data/voices.js'
 import { generateMockAlignment } from '../../services/tts/mockGenerator.js'
+import { cleanTextForNarration, TEXT_AI_PROVIDER } from '../../services/textAi.js'
 
 const initialText = 'O Projeto Eunice transforma conteúdos em áudios naturais, com uma experiência minimalista e acompanhamento de texto no estilo karaoke.'
 
@@ -32,12 +33,11 @@ export default function Dashboard() {
     alignment: generateMockAlignment(text),
   }, [generated, provider, selectedVoice, source, text, title])
 
-  function cleanText() {
+  async function cleanText() {
     setIsCleaning(true)
-    window.setTimeout(() => {
-      setText((value) => value.replace(/\s+/g, ' ').trim())
-      setIsCleaning(false)
-    }, 700)
+    const result = await cleanTextForNarration(text)
+    setText(result.text)
+    setIsCleaning(false)
   }
 
   function generateAudio() {
@@ -52,7 +52,7 @@ export default function Dashboard() {
           <h1 className="mt-3 text-4xl font-black tracking-[-0.05em] text-ink md:text-6xl">Crie uma narração limpa e sincronizada.</h1>
         </div>
         <div className="rounded-full border border-line bg-white/70 px-4 py-2 text-sm font-bold text-muted">
-          ElevenLabs: eleven_flash_v2_5 · Cartesia: economy
+          IA texto: {TEXT_AI_PROVIDER.model} · TTS: ElevenLabs/Cartesia
         </div>
       </div>
 
