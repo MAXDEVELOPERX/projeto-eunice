@@ -5,7 +5,7 @@ import VoiceSelector from './VoiceSelector.jsx'
 import KaraokePlayer from '../library/KaraokePlayer.jsx'
 import { voices } from '../../data/voices.js'
 import { generateMockAlignment } from '../../services/tts/mockGenerator.js'
-import { cleanTextForNarration, TEXT_AI_PROVIDER } from '../../services/textAi.js'
+import { cleanTextForNarration, generateAudioTitle, TEXT_AI_PROVIDER } from '../../services/textAi.js'
 
 const initialText = 'O Projeto Eunice transforma conteúdos em áudios naturais, com uma experiência minimalista e acompanhamento de texto no estilo karaoke.'
 
@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [style, setStyle] = useState('Natural')
   const [generated, setGenerated] = useState(null)
   const [isCleaning, setIsCleaning] = useState(false)
+  const [isTitling, setIsTitling] = useState(false)
 
   const selectedVoice = voices.find((item) => item.id === voice)
 
@@ -40,8 +41,23 @@ export default function Dashboard() {
     setIsCleaning(false)
   }
 
-  function generateAudio() {
-    setGenerated({ ...previewItem, id: crypto.randomUUID(), alignment: generateMockAlignment(text) })
+  async function generateTitle() {
+    setIsTitling(true)
+    const result = await generateAudioTitle(text)
+    setTitle(result.title)
+    setIsTitling(false)
+  }
+
+  async function generateAudio() {
+    let nextTitle = title.trim()
+
+    if (!nextTitle || nextTitle === 'Nova leitura com Eunice') {
+      const result = await generateAudioTitle(text)
+      nextTitle = result.title
+      setTitle(nextTitle)
+    }
+
+    setGenerated({ ...previewItem, title: nextTitle, id: crypto.randomUUID(), alignment: generateMockAlignment(text) })
   }
 
   return (
@@ -63,7 +79,14 @@ export default function Dashboard() {
 
             <label className="block">
               <span className="mb-2 block text-sm font-bold text-ink">Título do áudio</span>
-              <input value={title} onChange={(event) => setTitle(event.target.value)} className="w-full rounded-2xl border border-line bg-white/86 px-4 py-3 text-ink outline-none focus:border-lilac" />
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <input value={title} onChange={(event) => setTitle(event.target.value)} className="w-full rounded-2xl border border-line bg-white/86 px-4 py-3 text-ink outline-none focus:border-lilac" />
+                <button type="button" onClick={generateTitle} className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl border border-line bg-white px-4 py-3 text-sm font-bold text-ink transition hover:-translate-y-0.5 hover:shadow-md">
+                  {isTitling ? <Loader2 className="h-4 w-4 animate-spin" /> : <Bot className="h-4 w-4" />}
+                  Gerar título
+                </button>
+              </div>
+              <span className="mt-2 block text-xs font-semibold text-muted">DeepSeek sugere o título a partir do texto inserido.</span>
             </label>
 
             {source === 'pdf' && (

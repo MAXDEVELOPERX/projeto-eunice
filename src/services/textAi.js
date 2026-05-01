@@ -15,3 +15,16 @@ export async function cleanTextForNarration(text) {
     model: TEXT_AI_PROVIDER.model,
   }
 }
+
+export async function generateAudioTitle(text) {
+  const clean = text.replace(/\s+/g, ' ').trim()
+  const firstSentence = clean.split(/[.!?]/).find(Boolean) ?? clean
+  const words = firstSentence.split(' ').filter(Boolean).slice(0, 8)
+  const title = words.join(' ').replace(/[,;:]$/g, '')
+
+  return {
+    title: title || 'Nova leitura com Eunice',
+    provider: TEXT_AI_PROVIDER.name,
+    model: TEXT_AI_PROVIDER.model,
+  }
+}
