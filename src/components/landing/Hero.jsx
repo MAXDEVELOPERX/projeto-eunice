@@ -75,36 +75,25 @@ export default function Hero({ onStart }) {
       >
         <div className="absolute -left-8 top-10 h-32 w-32 rounded-full bg-blush/50 blur-3xl" />
         <div className="absolute -right-4 bottom-6 h-40 w-40 rounded-full bg-mint/50 blur-3xl" />
-        <div className="glass-card relative overflow-hidden rounded-[2.5rem] p-6 soft-shadow">
-          <div className="rounded-[2rem] bg-gradient-to-br from-white via-lavender/70 to-mint/40 p-5">
-            <div className="mb-6 flex items-center justify-between">
+        <div className="glass-card relative overflow-hidden rounded-[2.5rem] p-3 soft-shadow">
+          <img
+            src="/eunice-hero.jpg"
+            alt="Ilustração pastel gerada por IA para o Projeto Eunice"
+            className="aspect-square w-full rounded-[2rem] object-cover"
+          />
+          <div className="absolute bottom-6 left-6 right-6 rounded-3xl border border-white/70 bg-white/78 p-4 shadow-xl backdrop-blur-xl">
+            <div className="mb-3 flex items-center justify-between">
               <div>
                 <p className="text-sm font-bold text-muted">Voz ativa</p>
                 <p className="text-3xl font-black text-ink">Eunice</p>
               </div>
-              <div className="grid h-16 w-16 place-items-center rounded-3xl bg-white shadow-sm">
-                <Mic2 className="h-8 w-8 text-lilac" />
+              <div className="grid h-14 w-14 place-items-center rounded-2xl bg-white shadow-sm">
+                <Mic2 className="h-7 w-7 text-lilac" />
               </div>
             </div>
-
-            <div className="space-y-3">
-              {[72, 92, 58, 84, 66].map((width, index) => (
-                <motion.div
-                  key={width}
-                  initial={{ scaleX: 0.45 }}
-                  animate={{ scaleX: [0.45, 1, 0.68, 1] }}
-                  transition={{ duration: 2.4, repeat: Infinity, delay: index * 0.18 }}
-                  style={{ width: `${width}%`, transformOrigin: 'left' }}
-                  className="h-4 rounded-full bg-white/90 shadow-sm"
-                />
-              ))}
-            </div>
-
-            <div className="mt-8 rounded-3xl bg-white/78 p-4">
-              <p className="text-sm font-semibold leading-6 text-muted">
-                <span className="rounded-xl bg-lilac/35 px-2 py-1 text-ink">Transforme</span> leitura em escuta com palavras destacadas no tempo certo.
-              </p>
-            </div>
+            <p className="text-sm font-semibold leading-6 text-muted">
+              <span className="rounded-xl bg-lilac/35 px-2 py-1 text-ink">Karaoke</span> sincronizado com a narração.
+            </p>
           </div>
         </div>
       </motion.div>

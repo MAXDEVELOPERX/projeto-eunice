@@ -100,6 +100,9 @@ export default function Dashboard() {
         </div>
 
         <div className="space-y-5">
+          <div className="glass-card overflow-hidden rounded-[2rem] p-3">
+            <img src="/eunice-dashboard.jpg" alt="Ilustração do dashboard do Projeto Eunice" className="aspect-[16/10] w-full rounded-[1.5rem] object-cover" />
+          </div>
           <VoiceSelector provider={provider} setProvider={setProvider} voice={voice} setVoice={setVoice} style={style} setStyle={setStyle} />
           <div className="glass-card rounded-[2rem] p-5">
             <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-lilac">Prévia karaoke</p>

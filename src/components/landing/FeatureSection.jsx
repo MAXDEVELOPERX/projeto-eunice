@@ -34,6 +34,23 @@ export default function FeatureSection() {
         <p className="max-w-xl text-muted">Projetado para começar simples com dados mockados e evoluir para integrações reais com ElevenLabs, Cartesia, PDF, links e IA.</p>
       </div>
 
+      <div className="mb-5 grid gap-5 lg:grid-cols-2">
+        <article className="glass-card overflow-hidden rounded-[2.5rem] p-3">
+          <img src="/eunice-dashboard.jpg" alt="Dashboard pastel gerado por IA" className="aspect-[16/11] w-full rounded-[2rem] object-cover" />
+          <div className="p-5">
+            <h3 className="text-2xl font-black text-ink">Dashboard visual</h3>
+            <p className="mt-2 leading-7 text-muted">Área para colar texto, inserir PDF ou link, limpar com IA e gerar áudio com Eunice.</p>
+          </div>
+        </article>
+        <article className="glass-card overflow-hidden rounded-[2.5rem] p-3">
+          <img src="/eunice-library.jpg" alt="Biblioteca de áudios pastel gerada por IA" className="aspect-[16/11] w-full rounded-[2rem] object-cover" />
+          <div className="p-5">
+            <h3 className="text-2xl font-black text-ink">Libraries com karaoke</h3>
+            <p className="mt-2 leading-7 text-muted">Cada áudio fica salvo com texto, voz, provedor, modelo e acompanhamento sincronizado.</p>
+          </div>
+        </article>
+      </div>
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {features.map((feature) => {
           const Icon = feature.icon

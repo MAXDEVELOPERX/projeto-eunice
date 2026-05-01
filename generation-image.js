@@ -1,8 +1,18 @@
 import fs from "node:fs";
+import path from "node:path";
 
-const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
-const API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
+const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID ?? process.env.CloudflareIDAccount;
+const API_TOKEN = process.env.CLOUDFLARE_API_TOKEN ?? process.env.CloudflareAPIToken;
 const model = "@cf/bytedance/stable-diffusion-xl-lightning";
+
+const args = process.argv.slice(2);
+const outputIndex = args.indexOf("--output");
+const promptIndex = args.indexOf("--prompt");
+
+const output = outputIndex >= 0 ? args[outputIndex + 1] : "public/eunice-hero.jpg";
+const prompt = promptIndex >= 0
+  ? args[promptIndex + 1]
+  : "Minimal pastel 3D illustration of a friendly text to speech web app interface, soft cream background, lavender and mint audio waves, rounded glass cards, elegant product design, no text, clean composition, high quality";
 
 function startSpinner(mensagem = "Gerando imagem") {
   const frames = ["/", "-", "\\", "|"];
@@ -19,6 +29,10 @@ function stopSpinner(spinner) {
 }
 
 async function generateImage() {
+  if (!ACCOUNT_ID || !API_TOKEN) {
+    throw new Error("Defina CLOUDFLARE_ACCOUNT_ID e CLOUDFLARE_API_TOKEN antes de gerar imagens.");
+  }
+
   const spinner = startSpinner("Gerando imagem");
 
   const response = await fetch(
@@ -27,11 +41,11 @@ async function generateImage() {
       method: "POST",
       headers: {
         Authorization: `Bearer ${API_TOKEN}`,
-        "Content-Type": "application/json", // ✅ JSON aqui
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ // ✅ JSON.stringify, não FormData
-        prompt: "Ultra realistic photo of a futuristic sneaker on a glass table, premium studio lighting, dark minimalist background, product advertisement style, high quality",
-        negative_prompt: "blurry, distorted, bad anatomy, low quality, watermark, text",
+      body: JSON.stringify({
+        prompt,
+        negative_prompt: "text, watermark, logo, blurry, distorted, bad anatomy, low quality, noisy, harsh neon, dark cyberpunk",
         num_steps: 20,
         guidance: 7.5,
         width: 1024,
@@ -44,14 +58,17 @@ async function generateImage() {
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error("❌ Erro da API:", response.status, errorText);
-    return;
+    throw new Error(`Erro da API: ${response.status} ${errorText}`);
   }
 
   const arrayBuffer = await response.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
-  fs.writeFileSync("imagem-cloudflare.jpg", buffer);
-  console.log("✅ Imagem salva como imagem-cloudflare.jpg");
+  fs.mkdirSync(path.dirname(output), { recursive: true });
+  fs.writeFileSync(output, buffer);
+  console.log(`✅ Imagem salva como ${output}`);
 }
 
-generateImage().catch(console.error);
+generateImage().catch((error) => {
+  console.error(error.message);
+  process.exitCode = 1;
+});
